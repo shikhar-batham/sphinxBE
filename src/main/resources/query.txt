@@ -1,0 +1,5 @@
+
+drop table teacher;
+drop table alumni;
+drop table student;
+drop table users;
