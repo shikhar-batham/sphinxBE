@@ -25,4 +25,6 @@ public class AlumniDto {
     private String role;
     private String position;
     private String workingCountry;
+    private String profileImage;
+    private UserDto user;
 }

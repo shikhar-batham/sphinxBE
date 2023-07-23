@@ -104,6 +104,7 @@ public class UserServiceImpl implements UserService {
 
         AlumniDto alumniDto = new AlumniDto();
 
+        alumniDto.setAlumniId(userDto.getUserId());
         alumniDto.setFirstName(userDto.getFirstName());
         alumniDto.setLastName(userDto.getLastName());
         alumniDto.setEmail(userDto.getEmail());
@@ -111,6 +112,8 @@ public class UserServiceImpl implements UserService {
         alumniDto.setCollege(userDto.getCollege());
         alumniDto.setPassword(userDto.getPassword());
         alumniDto.setUserName(userDto.getUsername());
+        alumniDto.setRegistrationDate(userDto.getRegistrationDate());
+        alumniDto.setUser(userDto);
 
 
         Alumni alumni = this.modelMapper.map(alumniDto, Alumni.class);
@@ -124,13 +127,17 @@ public class UserServiceImpl implements UserService {
 
         TeacherDto teacherDto = new TeacherDto();
 
+        teacherDto.setTeacherId(userDto.getUserId());
         teacherDto.setFirstName(userDto.getFirstName());
         teacherDto.setLastName(userDto.getLastName());
         teacherDto.setEmail(userDto.getEmail());
         teacherDto.setGender(userDto.getGender());
         teacherDto.setCollege(userDto.getCollege());
         teacherDto.setPassword(userDto.getPassword());
-//        teacherDto.setUserName(userDto.getUserName());
+        teacherDto.setUserName(userDto.getUsername());
+        teacherDto.setRegistrationDate(userDto.getRegistrationDate());
+        teacherDto.setUser(userDto);
+
 
         Teacher teacher = this.modelMapper.map(teacherDto, Teacher.class);
 

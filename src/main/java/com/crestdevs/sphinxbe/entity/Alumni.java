@@ -31,6 +31,7 @@ public class Alumni {
     private String role;
     private String position;
     private String workingCountry;
+    private String profileImage;
 
     @OneToOne
     @JoinColumn(name = "user_id")

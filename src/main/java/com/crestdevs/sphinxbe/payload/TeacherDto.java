@@ -20,4 +20,6 @@ public class TeacherDto {
     private String password;
     private String registrationDate;
     private String department;
+    private String profileImage;
+    private UserDto user;
 }

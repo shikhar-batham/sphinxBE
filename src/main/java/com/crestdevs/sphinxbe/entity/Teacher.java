@@ -25,6 +25,7 @@ public class Teacher {
     private String password;
     private String registrationDate;
     private String department;
+    private String profileImage;
 
     @OneToOne
     @JoinColumn(name = "userId")

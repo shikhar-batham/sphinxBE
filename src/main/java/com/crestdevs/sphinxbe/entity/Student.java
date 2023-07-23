@@ -26,6 +26,7 @@ public class Student {
     private String registrationDate;
     private String branch;
     private String passingYear;
+    private String profileImage;
 
     @OneToOne
     @JoinColumn(name = "user_id")

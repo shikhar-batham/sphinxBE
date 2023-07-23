@@ -20,5 +20,6 @@ public class StudentDto {
     private String registrationDate;
     private String branch;
     private String passingYear;
+    private String profileImage;
     private UserDto user;
 }
