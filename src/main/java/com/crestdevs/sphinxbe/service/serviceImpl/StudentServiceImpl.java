@@ -102,6 +102,21 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Boolean uploadStudentProfileImageByEmail(String email, String path, MultipartFile file) throws IOException {
+        Student fetchedStudent = null;
+        try {
+            fetchedStudent = this.studentRepo.findByEmail(email);
+        } catch (Exception ignored) {
+        }
+        String image = this.fileService.uploadImage(path, file);
+        fetchedStudent.setProfileImage(image);
+
+        this.studentRepo.save(fetchedStudent);
+
+        return true;
+    }
+
+    @Override
     public void downloadStudentImageById(Integer studentId, String path, HttpServletResponse response) throws IOException {
 
         Student fetchedStudent = this.studentRepo.findById(studentId)

@@ -1,21 +1,17 @@
 package com.crestdevs.sphinxbe.service.serviceImpl;
 
-import com.crestdevs.sphinxbe.entity.Alumni;
-import com.crestdevs.sphinxbe.entity.Student;
-import com.crestdevs.sphinxbe.entity.Teacher;
-import com.crestdevs.sphinxbe.entity.User;
+import com.crestdevs.sphinxbe.config.AppConstants;
+import com.crestdevs.sphinxbe.entity.*;
 import com.crestdevs.sphinxbe.exception.ResourceNotFoundException;
 import com.crestdevs.sphinxbe.payload.AlumniDto;
 import com.crestdevs.sphinxbe.payload.StudentDto;
 import com.crestdevs.sphinxbe.payload.TeacherDto;
 import com.crestdevs.sphinxbe.payload.UserDto;
-import com.crestdevs.sphinxbe.repository.AlumniRepo;
-import com.crestdevs.sphinxbe.repository.StudentRepo;
-import com.crestdevs.sphinxbe.repository.TeacherRepo;
-import com.crestdevs.sphinxbe.repository.UserRepo;
+import com.crestdevs.sphinxbe.repository.*;
 import com.crestdevs.sphinxbe.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -42,6 +38,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepo roleRepo;
+
     @Override
     public UserDto registerNewUser(UserDto userDto) {
 
@@ -53,13 +55,16 @@ public class UserServiceImpl implements UserService {
         String type = userDto.getType();
 
         User user = this.modelMapper.map(userDto, User.class);
-        user.setRegistrationDate(date);
 
         Optional<User> checkUser = this.userRepo.findByEmail(userDto.getEmail());
-
         if (checkUser.isPresent()) {
             return null;
         }
+
+        user.setRegistrationDate(date);
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        Role role = this.roleRepo.findById(AppConstants.NORMAL_USER).get();
+        user.getRoles().add(role);
 
         User newUser = this.userRepo.save(user);
 

@@ -19,4 +19,14 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<ApiResponse>(response, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiResponse> handleApiException(ApiException ex) {
+
+        String message = ex.getMessage();
+
+        ApiResponse response = new ApiResponse(message, false);
+
+        return new ResponseEntity<ApiResponse>(response, HttpStatus.BAD_REQUEST);
+    }
 }

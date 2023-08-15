@@ -78,4 +78,17 @@ public class StudentController {
 
         }
     }
+
+    @PostMapping("/uploadImageByEmail/{email}")
+    public ResponseEntity<ApiResponse> uploadStudentProfileImageByEmail(@PathVariable("email") String email,
+                                                                        @RequestParam("image") MultipartFile image) throws IOException {
+
+
+        Boolean res = this.studentService.uploadStudentProfileImageByEmail(email, path, image);
+
+        if (res)
+            return new ResponseEntity<>(new ApiResponse("Image uploaded successfully!!", true), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(new ApiResponse("Something went wrong. Failed to upload you image!!", false), HttpStatus.CONFLICT);
+    }
 }

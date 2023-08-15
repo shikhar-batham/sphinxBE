@@ -26,6 +26,6 @@ public interface StudentService {
     void deleteStudent(Integer studentId);
 
     Boolean uploadStudentProfileImage(Integer studentId, String path, MultipartFile file) throws IOException;
-
+    Boolean uploadStudentProfileImageByEmail(String email, String path, MultipartFile file) throws IOException;
     void downloadStudentImageById(Integer studentId, String path, HttpServletResponse response) throws IOException;
 }
