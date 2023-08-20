@@ -103,54 +103,6 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
-//    @PostMapping("/login")
-//    public ResponseEntity<JwtAuthResponse> userLogin(@RequestBody JwtAuthRequest request) throws InvalidKeySpecException, NoSuchAlgorithmException {
-//
-//        JwtAuthResponse response;
-//        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Kolkata"));
-//        calendar.getTimeZone();
-//        String username;
-//
-//        UserDto userDtoByUsername = this.userService.getUserByUsername(request.getUsername());
-//
-//        if (userDtoByUsername != null) {
-//            username = userDtoByUsername.getEmail();
-//        } else {
-//            username = request.getUsername();
-//        }
-//
-//        this.authenticate(username, request.getPassword());
-//
-//        UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-//
-//        UserDto userDto = this.userService.getUserByEmail(username);
-//
-//        if (userDto == null) {
-//            return new ResponseEntity<>(new JwtAuthResponse(), HttpStatus.NOT_FOUND);
-//        }
-//
-//        VerificationTokenUserDto currentVerificationTokenUserDto = this.verificationTokenUserService.getVerificationToken(userDto);
-//
-//        if (currentVerificationTokenUserDto != null) {
-//
-//            if (currentVerificationTokenUserDto.getExpiration().getTime() - calendar.getTime().getTime() > 0) {
-//                response = new JwtAuthResponse();
-//                response.setToken(currentVerificationTokenUserDto.getToken());
-//                return new ResponseEntity<>(response, HttpStatus.OK);
-//            }
-//        }
-//
-//        String token = this.jwtTokenHelper.generateToken(userDetails.getUsername());
-//
-//        this.verificationTokenUserService.createVerificationToken(userDto, token);
-//
-//        response = new JwtAuthResponse();
-//        response.setToken(token);
-//
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
-
     private void authenticate(String username, String password) {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,

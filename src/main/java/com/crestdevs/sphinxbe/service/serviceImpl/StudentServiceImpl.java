@@ -117,6 +117,23 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public void downloadStudentProfileImageByEmail(String email, String path, HttpServletResponse response) throws IOException {
+
+        Student fetchedStudent = this.studentRepo.findByEmail(email);
+
+        if (fetchedStudent == null)
+            return;
+
+        String image = fetchedStudent.getProfileImage();
+
+        if (!image.isEmpty()) {
+            InputStream resource = this.fileService.getResource(path, image);
+            response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+            StreamUtils.copy(resource, response.getOutputStream());
+        }
+    }
+
+    @Override
     public void downloadStudentImageById(Integer studentId, String path, HttpServletResponse response) throws IOException {
 
         Student fetchedStudent = this.studentRepo.findById(studentId)

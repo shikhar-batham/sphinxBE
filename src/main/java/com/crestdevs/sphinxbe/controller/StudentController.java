@@ -91,4 +91,27 @@ public class StudentController {
         else
             return new ResponseEntity<>(new ApiResponse("Something went wrong. Failed to upload you image!!", false), HttpStatus.CONFLICT);
     }
+
+//    @GetMapping("/getStudentImage/{email}")
+//    public void downloadStudentProfileImageByEmail(@PathVariable("email") String email, HttpServletResponse response) {
+//
+//        try {
+//            this.studentService.downloadStudentProfileImageByEmail(email, path, response);
+//        } catch (Exception ignored) {
+//
+//        }
+
+
+    @GetMapping("/getStudentImage/{email:.+}")
+    public void downloadStudentProfileImageByEmail(@PathVariable("email") String email, HttpServletResponse response) {
+        try {
+            this.studentService.downloadStudentProfileImageByEmail(email, path, response);
+
+            // Set the content type of the response
+            response.setContentType(MediaType.IMAGE_PNG_VALUE); // Change to the appropriate image type
+
+        } catch (Exception ignored) {
+            // Handle exceptions appropriately
+        }
+    }
 }
