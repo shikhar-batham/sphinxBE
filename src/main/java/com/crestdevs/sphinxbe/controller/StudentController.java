@@ -2,6 +2,7 @@ package com.crestdevs.sphinxbe.controller;
 
 import com.crestdevs.sphinxbe.payload.ApiResponse;
 import com.crestdevs.sphinxbe.payload.StudentDto;
+import com.crestdevs.sphinxbe.service.FileService;
 import com.crestdevs.sphinxbe.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +20,11 @@ import java.util.List;
 @RequestMapping("/api/v1/student")
 public class StudentController {
 
-    @Autowired
-    private StudentService studentService;
-
     @Value("${project.studentProfileImages}")
     private String path;
+
+    @Autowired
+    private StudentService studentService;
 
     @PutMapping("/{studentId}")
     public ResponseEntity<StudentDto> updateStudent(@RequestBody StudentDto studentDto, @PathVariable("studentId") Integer studentId) {

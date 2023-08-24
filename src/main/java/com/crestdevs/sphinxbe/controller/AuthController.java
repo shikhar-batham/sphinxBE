@@ -87,6 +87,7 @@ public class AuthController {
 
                 response = new JwtAuthResponse();
                 response.setToken(verificationTokenUserDto.getToken());
+                response.setUser(userDto);
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
@@ -99,6 +100,7 @@ public class AuthController {
         response = new JwtAuthResponse();
 
         response.setToken(token);
+        response.setUser(userDto);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
