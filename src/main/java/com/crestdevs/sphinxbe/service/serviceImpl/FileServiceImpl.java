@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -30,6 +31,7 @@ public class FileServiceImpl implements FileService {
         if (!isAllowedImageFormat(fileExtension)) {
             return null;
         }
+        long size=file.getSize();
 
         if (file.getSize() > 2 * 1024) {
 
@@ -37,6 +39,7 @@ public class FileServiceImpl implements FileService {
             FileInputStream input = new FileInputStream(compressedImageFile);
             file = new MockMultipartFile("file", file.getName(), "text/plain", new BufferedInputStream(input));
         }
+
 
         String fileName = randomId.concat(name.substring(name.lastIndexOf(".")));
         String filePath = path + File.separator + fileName;
@@ -87,4 +90,17 @@ public class FileServiceImpl implements FileService {
         return compressedImageFile;
     }
 
+    private File convertMultiPartFileToFile(MultipartFile file) {
+
+        File convertedFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+
+        try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
+
+            fos.write(file.getBytes());
+
+        } catch (IOException e) {
+
+        }
+        return convertedFile;
+    }
 }

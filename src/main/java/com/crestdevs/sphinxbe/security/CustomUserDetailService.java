@@ -5,7 +5,6 @@ import com.crestdevs.sphinxbe.entity.User;
 import com.crestdevs.sphinxbe.exception.ResourceNotFoundException;
 import com.crestdevs.sphinxbe.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
