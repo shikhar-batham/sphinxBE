@@ -103,6 +103,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Boolean uploadStudentProfileImageByEmail(String email, String path, MultipartFile file) throws IOException {
+
         Student fetchedStudent = null;
         try {
             fetchedStudent = this.studentRepo.findByEmail(email);
@@ -146,5 +147,14 @@ public class StudentServiceImpl implements StudentService {
             response.setContentType(MediaType.IMAGE_JPEG_VALUE);
             StreamUtils.copy(resource, response.getOutputStream());
         }
+    }
+
+    @Override
+    public List<StudentDto> getAllStudentByCollegeName(String collegeName) {
+
+        List<Student> fetchedStudentsByCollege = this.studentRepo.findByIgnoreCaseCollege(collegeName);
+
+        return fetchedStudentsByCollege.stream().map(student -> this.modelMapper.map(student, StudentDto.class)).collect(Collectors.toList());
+
     }
 }

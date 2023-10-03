@@ -5,10 +5,17 @@ import com.crestdevs.sphinxbe.exception.ResourceNotFoundException;
 import com.crestdevs.sphinxbe.payload.AlumniDto;
 import com.crestdevs.sphinxbe.repository.AlumniRepo;
 import com.crestdevs.sphinxbe.service.AlumniService;
+import com.crestdevs.sphinxbe.service.FileService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +27,9 @@ public class AlumniServiceImpl implements AlumniService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private FileService fileService;
 
     @Override
     public AlumniDto createAlumni(AlumniDto alumniDto) {
@@ -78,5 +88,67 @@ public class AlumniServiceImpl implements AlumniService {
                 .orElseThrow(() -> new ResourceNotFoundException("Alumni", "alumni_id", alumniId));
 
         this.alumniRepo.delete(fetchedAlumni);
+    }
+
+    @Override
+    public Boolean uploadAlumniProfileImage(Integer alumniId, String path, MultipartFile file) throws IOException {
+
+        Alumni fethchedAlumni = this.alumniRepo.findById(alumniId).orElseThrow(() -> new ResourceNotFoundException("Alumni", "Alumni_id", alumniId));
+
+        String image = this.fileService.uploadImage(path, file);
+        fethchedAlumni.setProfileImage(image);
+
+        this.alumniRepo.save(fethchedAlumni);
+
+        return true;
+    }
+
+    @Override
+    public void downloadAlumniProfileImageById(Integer alumniId, String path, HttpServletResponse response) throws IOException {
+
+        Alumni fetchedAlumni = this.alumniRepo.findById(alumniId).
+                orElseThrow(() -> new ResourceNotFoundException("Alumni", "Alumni_Id", alumniId));
+
+        String image = fetchedAlumni.getProfileImage();
+
+        if (!image.isEmpty()) {
+            InputStream resource = this.fileService.getResource(path, image);
+            response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+            StreamUtils.copy(resource, response.getOutputStream());
+        }
+    }
+
+    @Override
+    public Boolean uploadAlumniProfileImageByEmail(String email, String path, MultipartFile file) throws IOException {
+
+        Alumni fetchedAlumni = null;
+
+        try {
+            fetchedAlumni = this.alumniRepo.findByEmail(email);
+        } catch (Exception ignored) {
+        }
+
+        String image = this.fileService.uploadImage(path, file);
+        assert fetchedAlumni != null;
+        fetchedAlumni.setProfileImage(image);
+
+        this.alumniRepo.save(fetchedAlumni);
+
+        return true;
+    }
+
+    @Override
+    public void downloadAlumniProfileImageByEmail(String email, String path, HttpServletResponse response) throws IOException {
+
+        Alumni fetchedAlumni = this.alumniRepo.findByEmail(email);
+        assert fetchedAlumni != null;
+
+        String image = fetchedAlumni.getProfileImage();
+
+        if (!image.isEmpty()) {
+            InputStream resource = this.fileService.getResource(path, image);
+            response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+            StreamUtils.copy(resource, response.getOutputStream());
+        }
     }
 }

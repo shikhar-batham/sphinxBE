@@ -1,7 +1,10 @@
 package com.crestdevs.sphinxbe.service;
 
 import com.crestdevs.sphinxbe.payload.AlumniDto;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 public interface AlumniService {
@@ -20,4 +23,12 @@ public interface AlumniService {
 
     //deleteAlumni
     void deleteAlumni(Integer alumniId);
+
+    Boolean uploadAlumniProfileImage(Integer alumniId, String path, MultipartFile file) throws IOException;
+
+    void downloadAlumniProfileImageById(Integer alumniId, String path, HttpServletResponse response) throws IOException;
+
+    Boolean uploadAlumniProfileImageByEmail(String email, String path, MultipartFile file) throws IOException;
+
+    void downloadAlumniProfileImageByEmail(String email, String path, HttpServletResponse response) throws IOException;
 }

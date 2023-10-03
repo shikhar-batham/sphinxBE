@@ -2,7 +2,9 @@
 package com.crestdevs.sphinxbe.controller;
 
 import com.crestdevs.sphinxbe.payload.ApiResponse;
+import com.crestdevs.sphinxbe.payload.FeedDto;
 import com.crestdevs.sphinxbe.payload.PostDto;
+import com.crestdevs.sphinxbe.service.FeedService;
 import com.crestdevs.sphinxbe.service.FileService;
 import com.crestdevs.sphinxbe.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private FeedService feedService;
 
     @Autowired
     private FileService fileService;
@@ -99,8 +104,11 @@ public class PostController {
 
         PostDto fetchedPostDto = this.postService.getPostById(postId);
         fetchedPostDto.setImage(uploadedImage);
-
         PostDto updatedPostDto = this.postService.updatePost(fetchedPostDto, postId);
+
+        FeedDto fetchedFeedDto = this.feedService.getFeedByPostId(postId);
+        fetchedFeedDto.setImage(uploadedImage);
+        this.feedService.updateFeedByPostId(fetchedFeedDto, postId);
 
         return new ResponseEntity<>(updatedPostDto, HttpStatus.OK);
     }
@@ -113,8 +121,8 @@ public class PostController {
         return new ResponseEntity<>(postDtoList, HttpStatus.OK);
     }
 
-    @GetMapping("/getPostImage/{userId}")
-    public void downloadPostImageByPostId(@PathVariable("userId") Integer userId, HttpServletResponse response) throws IOException {
+    @GetMapping("/getPostImage/{postId}")
+    public void downloadPostImageByPostId(@PathVariable("postId") Integer userId, HttpServletResponse response) throws IOException {
 
         try {
             this.postService.downloadPostImageByPostId(userId, postImagePath, response);
@@ -122,5 +130,12 @@ public class PostController {
         } catch (Exception ignored) {
 
         }
+    }
+
+    @GetMapping("/getAllPosts")
+    public ResponseEntity<List<PostDto>> getAllPost() {
+
+        List<PostDto> postDtoList = this.postService.getAllPost();
+        return new ResponseEntity<>(postDtoList, HttpStatus.OK);
     }
 }

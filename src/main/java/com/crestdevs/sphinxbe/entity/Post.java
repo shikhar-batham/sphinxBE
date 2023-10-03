@@ -29,6 +29,8 @@ public class Post {
 
     private Date addedDate;
 
+    private Long milliDate;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

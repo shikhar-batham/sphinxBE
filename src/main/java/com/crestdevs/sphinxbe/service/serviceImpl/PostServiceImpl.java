@@ -1,10 +1,13 @@
 package com.crestdevs.sphinxbe.service.serviceImpl;
 
 
+import com.crestdevs.sphinxbe.entity.Feed;
 import com.crestdevs.sphinxbe.entity.Post;
 import com.crestdevs.sphinxbe.entity.User;
 import com.crestdevs.sphinxbe.exception.ResourceNotFoundException;
+import com.crestdevs.sphinxbe.payload.FeedDto;
 import com.crestdevs.sphinxbe.payload.PostDto;
+import com.crestdevs.sphinxbe.repository.FeedRepo;
 import com.crestdevs.sphinxbe.repository.PostRepo;
 import com.crestdevs.sphinxbe.repository.UserRepo;
 import com.crestdevs.sphinxbe.service.FileService;
@@ -40,7 +43,8 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private FileService fileService;
 
-
+    @Autowired
+    private FeedRepo feedRepo;
 
     @Override
     public PostDto createPost(PostDto postDto, Integer userId) throws IOException {
@@ -48,12 +52,18 @@ public class PostServiceImpl implements PostService {
         User fetchedUser = this.userRepo.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "user_id", userId));
 
+        long currentTime = System.currentTimeMillis();
+
         Post post = this.modelMapper.map(postDto, Post.class);
         post.setImage("default.png");
         post.setAddedDate(new Date());
+        post.setMilliDate(currentTime);
         post.setUser(fetchedUser);
 
         Post cratedPost = this.postRepo.save(post);
+
+        PostDto postDtoForFeed = this.modelMapper.map(cratedPost, PostDto.class);
+        this.createFeed(postDtoForFeed);
 
         return this.modelMapper.map(cratedPost, PostDto.class);
     }
@@ -156,4 +166,27 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    @Override
+    public List<PostDto> getAllPost() {
+
+        List<Post> postList = this.postRepo.findAll();
+
+        return postList.stream().map(post -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
+    }
+
+    public void createFeed(PostDto postDto) {
+
+        long currentTime = System.currentTimeMillis();
+
+        FeedDto feedDto = new FeedDto();
+        feedDto.setPostId(postDto.getPostId());
+        feedDto.setDescription(postDto.getDescription());
+        feedDto.setAddedDate(postDto.getAddedDate());
+        feedDto.setImage(postDto.getImage());
+        feedDto.setMilliDate(currentTime);
+        feedDto.setUser(postDto.getUser());
+
+        Feed feed = this.modelMapper.map(feedDto, Feed.class);
+        this.feedRepo.save(feed);
+    }
 }

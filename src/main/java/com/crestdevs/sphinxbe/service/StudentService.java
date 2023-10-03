@@ -31,4 +31,13 @@ public interface StudentService {
     void downloadStudentProfileImageByEmail(String email, String path, HttpServletResponse response) throws IOException;
 
     void downloadStudentImageById(Integer studentId, String path, HttpServletResponse response) throws IOException;
+
+    //get all student by college name from users table
+    List<StudentDto>getAllStudentByCollegeName(String collegeName);
+
+    //get all students by year from student table
+
+    //get all students by branch from student table
+
+    // get all students by branch and year from student table
 }

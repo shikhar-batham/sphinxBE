@@ -2,7 +2,6 @@ package com.crestdevs.sphinxbe.controller;
 
 import com.crestdevs.sphinxbe.payload.ApiResponse;
 import com.crestdevs.sphinxbe.payload.StudentDto;
-import com.crestdevs.sphinxbe.service.FileService;
 import com.crestdevs.sphinxbe.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,7 +66,7 @@ public class StudentController {
         if (res)
             return new ResponseEntity<>(new ApiResponse("Image uploaded successfully!!", true), HttpStatus.OK);
         else
-            return new ResponseEntity<>(new ApiResponse("Something went wrong. Failed to upload you image!!", false), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(new ApiResponse("Something went wrong. Failed to upload your image!!", false), HttpStatus.CONFLICT);
     }
 
     @GetMapping(value = "/getImage/{studentId}", produces = MediaType.IMAGE_JPEG_VALUE)
@@ -115,4 +114,14 @@ public class StudentController {
             // Handle exceptions appropriately
         }
     }
+
+    @GetMapping("/getAllStudentByCollegeName")
+    public ResponseEntity<List<StudentDto>> getAllStudentByCollegeName(@RequestParam("collegeName") String collegeName) {
+
+        List<StudentDto> studentDtoList = this.studentService.getAllStudentByCollegeName(collegeName);
+
+        return new ResponseEntity<>(studentDtoList, HttpStatus.OK);
+
+    }
+
 }

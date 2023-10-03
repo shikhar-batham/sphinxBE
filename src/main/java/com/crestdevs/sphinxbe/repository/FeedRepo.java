@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FeedRepo extends JpaRepository<Feed, Integer> {
+
+    //find feed by post id
+    Feed findByPostId(Integer postId);
+
 }

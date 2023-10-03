@@ -5,6 +5,7 @@ select * from alumni;
 select * from teacher;
 select * from posts;
 
+
 drop table verification_token_user;
 drop table posts;
 drop table user_role;

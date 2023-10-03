@@ -18,6 +18,8 @@ public class Feed {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer feedId;
 
+    private Integer postId;
+
     @Column(length = 10000)
     private String description;
 

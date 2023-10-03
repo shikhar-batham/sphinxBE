@@ -204,4 +204,39 @@ public class UserServiceImpl implements UserService {
 
         this.userRepo.delete(fetchedUser);
     }
+
+    @Override
+    public List<UserDto> searchUserByFirstNameOrLastName(String firstName, String lastName) {
+
+        if (firstName.equals("") && lastName.equals("")) return null;
+
+        if (lastName.equals("")) {
+            return findByFirstName(firstName);
+        } else if (firstName.equals("")) {
+            return findByLastName(lastName);
+        } else {
+            return searchByFirstNameOrLastName(firstName, lastName);
+        }
+    }
+
+    private List<UserDto> searchByFirstNameOrLastName(String firstName, String lastName) {
+
+        List<User> userList = this.userRepo.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(firstName, lastName);
+
+        return userList.stream().map(user -> this.modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
+    }
+
+    private List<UserDto> findByFirstName(String firstName) {
+
+        List<User> userList = this.userRepo.findByFirstNameStartingWithIgnoreCase(firstName);
+
+        return userList.stream().map(user -> this.modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
+    }
+
+    private List<UserDto> findByLastName(String lastName) {
+
+        List<User> userList = this.userRepo.findByLastNameStartingWithIgnoreCase(lastName);
+
+        return userList.stream().map(user -> this.modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
+    }
 }

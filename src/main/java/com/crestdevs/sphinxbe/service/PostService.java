@@ -34,5 +34,7 @@ public interface PostService {
     //get all post by userId
     List<PostDto> getAllPostByUserId(Integer userId);
 
-    void downloadPostImageByPostId(Integer postId,String path, HttpServletResponse response) throws  IOException;
+    void downloadPostImageByPostId(Integer postId, String path, HttpServletResponse response) throws IOException;
+
+    List<PostDto> getAllPost();
 }

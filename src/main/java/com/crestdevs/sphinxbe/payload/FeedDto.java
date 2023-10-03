@@ -17,5 +17,5 @@ public class FeedDto {
     private String image;
     private Date addedDate;
     private UserDto user;
-    private Integer milliDate;
+    private Long milliDate;
 }
