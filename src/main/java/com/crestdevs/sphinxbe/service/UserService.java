@@ -27,5 +27,6 @@ public interface UserService {
     //delete user by id
     void deleteUserById(Integer userId);
 
-    List<UserDto> searchUserByFirstNameOrLastName(String firstName,String lastName);
+    List<UserDto> searchUserByFirstNameOrLastName(String firstName, String lastName);
+
 }

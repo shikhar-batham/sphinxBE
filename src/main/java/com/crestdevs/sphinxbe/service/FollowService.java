@@ -8,9 +8,11 @@ public interface FollowService {
 
     FollowDto createFollower(Integer follower, Integer following);
 
-    FollowDto unfollow(Integer follower, Integer following);
+    Boolean unfollowUser(Integer followerId, Integer followingId);
 
     //get all followers of a user
     List<FollowDto> getAllFollowerByUserId(Integer userId);
+
+
 
 }

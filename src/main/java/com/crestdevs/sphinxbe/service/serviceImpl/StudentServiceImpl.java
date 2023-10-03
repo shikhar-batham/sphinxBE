@@ -1,9 +1,11 @@
 package com.crestdevs.sphinxbe.service.serviceImpl;
 
 import com.crestdevs.sphinxbe.entity.Student;
+import com.crestdevs.sphinxbe.entity.User;
 import com.crestdevs.sphinxbe.exception.ResourceNotFoundException;
 import com.crestdevs.sphinxbe.payload.StudentDto;
 import com.crestdevs.sphinxbe.repository.StudentRepo;
+import com.crestdevs.sphinxbe.repository.UserRepo;
 import com.crestdevs.sphinxbe.service.FileService;
 import com.crestdevs.sphinxbe.service.StudentService;
 import org.modelmapper.ModelMapper;
@@ -31,6 +33,9 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private UserRepo userRepo;
+
     @Override
     public StudentDto createStudent(StudentDto studentDto) {
 
@@ -49,7 +54,6 @@ public class StudentServiceImpl implements StudentService {
 
         fetchedStudent.setFirstName(studentDto.getFirstName());
         fetchedStudent.setLastName(studentDto.getLastName());
-        fetchedStudent.setEmail(studentDto.getEmail());
         fetchedStudent.setGender(studentDto.getGender());
         fetchedStudent.setCollege(studentDto.getCollege());
         fetchedStudent.setBranch(studentDto.getBranch());
@@ -57,7 +61,11 @@ public class StudentServiceImpl implements StudentService {
 
         Student updatedStudent = this.studentRepo.save(fetchedStudent);
 
-        return this.modelMapper.map(updatedStudent, StudentDto.class);
+        StudentDto updatedStudentDto = this.modelMapper.map(updatedStudent, StudentDto.class);
+
+        this.syncStudentAndUserOnUpdate(updatedStudentDto, updatedStudent.getUser().getId());
+
+        return updatedStudentDto;
     }
 
     @Override
@@ -156,5 +164,18 @@ public class StudentServiceImpl implements StudentService {
 
         return fetchedStudentsByCollege.stream().map(student -> this.modelMapper.map(student, StudentDto.class)).collect(Collectors.toList());
 
+    }
+
+    private void syncStudentAndUserOnUpdate(StudentDto studentDto, Integer userId) {
+
+        User fetchedUserToSync = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "user_id", userId));
+
+        fetchedUserToSync.setFirstName(studentDto.getFirstName());
+        fetchedUserToSync.setLastName(studentDto.getLastName());
+        fetchedUserToSync.setCollege(studentDto.getCollege());
+        fetchedUserToSync.setGender(studentDto.getGender());
+        fetchedUserToSync.setCollege(studentDto.getCollege());
+
+        this.userRepo.save(fetchedUserToSync);
     }
 }

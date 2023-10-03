@@ -44,8 +44,22 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
-    public FollowDto unfollow(Integer follower, Integer following) {
-        return null;
+    public Boolean unfollowUser(Integer followerId, Integer followingId) {
+
+        User followerUser = this.userRepo.findById(followerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Follower", "follower_id", followerId));
+
+        User followingUser = this.userRepo.findById(followingId)
+                .orElseThrow(() -> new ResourceNotFoundException("FollowingUser", "following_user_id", followingId));
+
+        Follow follow = this.followRepo.findByFollowerUserIdAndFollowingUserId(followerUser.getId(), followingUser.getId());
+
+        if (follow == null)
+            return false;
+
+        this.followRepo.delete(follow);
+
+        return true;
     }
 
     @Override
